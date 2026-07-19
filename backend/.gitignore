@@ -1,0 +1,5 @@
+# Local overrides — root .gitignore covers most patterns.
+# This file exists so backend-specific additions (e.g. generated
+# stubs, local configs) can live here without polluting the root.
+
+.venv/
