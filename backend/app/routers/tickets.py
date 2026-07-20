@@ -50,11 +50,7 @@ def list_tickets(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """List tickets, optionally filtered by **status** and/or **search**.
-
-    Search matches against ``customer_name``, ``customer_email``, ``subject``,
-    and ``description`` (case-insensitive).
-    """
+    # List tickets, optionally filtered by **status** and/or **search**.
     query = db.query(Ticket)
 
     if status_filter:

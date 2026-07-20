@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 # ---- Auth ----
@@ -18,7 +18,7 @@ class LoginRequest(BaseModel):
 # ---- Tickets ----
 class TicketCreate(BaseModel):
     customer_name: str
-    customer_email: str
+    customer_email: EmailStr
     subject: str
     description: str
 
