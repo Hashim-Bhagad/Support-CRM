@@ -27,11 +27,7 @@ class Ticket(Base):
     description = Column(Text, nullable=False)
     status = Column(String, default="Open")
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(
-        DateTime,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
-    )
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     notes = relationship("Note", back_populates="ticket", cascade="all, delete-orphan",
                          order_by="Note.created_at")
@@ -40,7 +36,7 @@ class Ticket(Base):
 class Note(Base):
     __tablename__ = "notes"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, index=True)
     ticket_id = Column(String, ForeignKey("tickets.ticket_id"), nullable=False)
     note_text = Column(Text, nullable=False)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True)

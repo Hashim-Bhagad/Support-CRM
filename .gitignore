@@ -1,0 +1,64 @@
+# ─── Python / Backend ───────────────────────────────────────
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.py[cod]
+backend/*.egg-info/
+backend/dist/
+backend/build/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/.mypy_cache/
+backend/htmlcov/
+backend/coverage/
+backend/coverage.*
+backend/*.db
+backend/*.sqlite3
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/.python-version
+
+# ─── Virtual environment (tracked inline) ──────────────────
+backend/.venv/
+
+# ─── Frontend (Node / Vite) ────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/*.tsbuildinfo
+frontend/.svelte-kit/
+frontend/.next/
+frontend/coverage/
+
+# ─── OS / Editor junk ──────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+*.orig
+
+# ─── IDE / Editor ──────────────────────────────────────────
+.vscode/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+
+# ─── General ───────────────────────────────────────────────
+*.log
+.env
+.env.*
+!.env.example
+.cache/
+tmp/
+temp/

@@ -71,4 +71,5 @@ class TicketUpdate(BaseModel):
 
 class TicketUpdateResponse(BaseModel):
     success: bool
+    status: str
     updated_at: datetime

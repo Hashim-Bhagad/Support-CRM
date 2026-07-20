@@ -13,7 +13,6 @@ router = APIRouter(prefix="/api/tickets", tags=["tickets"])
 
 
 def _generate_ticket_id(db_id: int) -> str:
-    # Return ``TKT-001`` style ID from the integer primary key.
     return f"TKT-{db_id:03d}"
 
 
@@ -21,12 +20,10 @@ def _generate_ticket_id(db_id: int) -> str:
 def create_ticket(
     payload: TicketCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    _current_user: User = Depends(get_current_user),
 ):
-    # Insert first with a placeholder ticket_id so we get the autoincrement id,
-    # then update ticket_id to the real "TKT-00X" value once we know it.
     ticket = Ticket(
-        ticket_id="",  # will be set after flush
+        ticket_id="",
         customer_name=payload.customer_name,
         customer_email=payload.customer_email,
         subject=payload.subject,
@@ -34,12 +31,10 @@ def create_ticket(
         status="Open",
     )
     db.add(ticket)
-    db.flush()  # get the auto-generated ``id``
-
+    db.flush()
     ticket.ticket_id = _generate_ticket_id(ticket.id)
     db.commit()
     db.refresh(ticket)
-
     return TicketCreateResponse(ticket_id=ticket.ticket_id, created_at=ticket.created_at)
 
 
@@ -48,14 +43,11 @@ def list_tickets(
     status_filter: str | None = Query(None, alias="status"),
     search: str | None = Query(None),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    _current_user: User = Depends(get_current_user),
 ):
-    # List tickets, optionally filtered by **status** and/or **search**.
     query = db.query(Ticket)
-
     if status_filter:
         query = query.filter(Ticket.status == status_filter)
-
     if search:
         like = f"%{search}%"
         query = query.filter(
@@ -65,24 +57,18 @@ def list_tickets(
             | Ticket.description.ilike(like)
             | Ticket.ticket_id.ilike(like)
         )
-
-    tickets = query.order_by(Ticket.created_at.desc()).all()
-    return tickets
+    return query.order_by(Ticket.created_at.desc()).all()
 
 
 @router.get("/{ticket_id}", response_model=TicketDetailOut)
 def get_ticket(
     ticket_id: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    _current_user: User = Depends(get_current_user),
 ):
-    # Return full ticket detail including all notes.
     ticket = db.query(Ticket).filter(Ticket.ticket_id == ticket_id).first()
     if not ticket:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Ticket {ticket_id} not found",
-        )
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"Ticket {ticket_id} not found")
     return ticket
 
 
@@ -93,14 +79,9 @@ def update_ticket(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    # Update a ticket's status and/or add a note.
-
     ticket = db.query(Ticket).filter(Ticket.ticket_id == ticket_id).first()
     if not ticket:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Ticket {ticket_id} not found",
-        )
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"Ticket {ticket_id} not found")
 
     if payload.status is not None:
         ticket.status = payload.status
@@ -117,4 +98,4 @@ def update_ticket(
     db.commit()
     db.refresh(ticket)
 
-    return TicketUpdateResponse(success=True, updated_at=ticket.updated_at)
+    return TicketUpdateResponse(success=True, status=ticket.status, updated_at=ticket.updated_at)
