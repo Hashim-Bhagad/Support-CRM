@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     #Database
     database_url: str
 
+    #CORS — comma-separated origins for production (e.g. https://app.vercel.app)
+    cors_origins: str = ""
+
     #seed for initial admin user
     admin_email: str
     admin_password: str

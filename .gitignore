@@ -16,7 +16,6 @@ backend/*.sqlite3
 backend/.env
 backend/.env.*
 !backend/.env.example
-backend/.python-version
 
 # ─── Virtual environment (tracked inline) ──────────────────
 backend/.venv/
